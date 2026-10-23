@@ -69,7 +69,7 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
 .section { position: relative; padding-block: var(--sect); }
 
 /* Type */
-.h2, .hero__title, .h3, .quick__title, .owner__name, .foot__h {
+.h2, .hero__title, .h3, .quick__title, .foot__h {
   font-family: var(--f-display);
   font-variation-settings: "wdth" 112;
   font-stretch: 112%;
@@ -362,13 +362,8 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
 }
 .owner__mark { width: 42%; opacity: .9; position: relative; }
 @media (min-width: 560px) and (max-width: 899px) { .owner { max-width: 440px; margin-inline: auto; width: 100%; } }
-@media (min-width: 1200px) { .owner__card { left: -64px; right: 40px; bottom: 32px; } }
-.owner__card { position: relative; margin: -90px 16px 0; border-radius: var(--r-md); padding: 22px 22px 8px; }
-.owner__name { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
-.owner__card p:not(.owner__name) { color: var(--ink-soft); font-size: 1rem; }
 @media (min-width: 900px) {
   .about__grid { grid-template-columns: 1.1fr .9fr; gap: clamp(56px, 7vw, 112px); }
-  .owner__card { position: absolute; left: -32px; right: 24px; bottom: 24px; margin: 0; }
 }
 
 /* ---------- Services ---------- */
