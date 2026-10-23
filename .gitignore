@@ -1,0 +1,22 @@
+# Project working files: never deploy or publish
+*.md
+!README.md
+.impeccable/
+photo-review/
+Logos/
+.photo-downloads.json
+assets/**/*.json
+
+# Images not used by any page
+assets/img/wordmark-white.webp
+assets/img/fotos/ilustrativas/cozinha-clara-limpeza-regular-ia.webp
+
+# Tooling and OS noise
+node_modules/
+*.log
+*.cjs
+*.mjs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/

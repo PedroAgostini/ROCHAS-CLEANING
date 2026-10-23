@@ -1,0 +1,24 @@
+/* TEAM */
+
+  Client: Rocha's Cleaning
+  Owner: Pamela Rocha
+  Location: Summerville, South Carolina, USA
+  Contact: cleaningrochas [at] gmail.com
+
+  Design and development: Eu Sou TS
+  Site: https://eusouts.com.br/
+  Location: Brazil
+
+/* THANKS */
+
+  Every Lowcountry homeowner who lets the crew through the door.
+
+/* SITE */
+
+  Last update: 2026/10/23
+  Language: English
+  Doctype: HTML5
+  Standards: HTML5, CSS3, ES2020
+  Components: Leaflet, OpenStreetMap / Esri map tiles, Web3Forms
+  Fonts: Archivo, Figtree (Google Fonts)
+  Software: Visual Studio Code, Claude Code

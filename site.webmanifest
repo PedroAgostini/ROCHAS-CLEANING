@@ -1,0 +1,17 @@
+{
+  "name": "Rocha's Cleaning",
+  "short_name": "Rocha's",
+  "description": "Owner-operated, fully insured house cleaning in Summerville and the Lowcountry.",
+  "lang": "en-US",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#CDEBF6",
+  "categories": ["business", "lifestyle"],
+  "icons": [
+    { "src": "/assets/icons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icons/maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

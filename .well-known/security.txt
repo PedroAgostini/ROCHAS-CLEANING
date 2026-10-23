@@ -1,0 +1,5 @@
+Contact: mailto:cleaningrochas@gmail.com
+Contact: https://eusouts.com.br/
+Expires: 2027-10-23T00:00:00.000Z
+Preferred-Languages: en, pt
+Canonical: https://rochascleaningservice.com/.well-known/security.txt

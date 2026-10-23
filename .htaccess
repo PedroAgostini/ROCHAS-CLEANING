@@ -1,0 +1,166 @@
+# Rocha's Cleaning | Apache config
+# Site: https://rochascleaningservice.com/
+# Test copy: https://rochas.escolats.com.br/ (kept out of search by the STAGING rule below)
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
+AddDefaultCharset utf-8
+ServerSignature Off
+
+# ----------------------------------------------------------------------
+# MIME types
+# ----------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/manifest+json      webmanifest
+  AddType image/webp                     webp
+  AddType image/x-icon                   ico
+  AddType image/svg+xml                  svg svgz
+  AddType text/plain                     txt
+  AddType text/vcard                     vcf
+  AddCharset utf-8 .html .css .js .json .webmanifest .txt .xml
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # --------------------------------------------------------------------
+  # HTTPS everywhere
+  # --------------------------------------------------------------------
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # www.rochascleaningservice.com -> rochascleaningservice.com
+  RewriteCond %{HTTP_HOST} ^www\.rochascleaningservice\.com$ [NC]
+  RewriteRule ^ https://rochascleaningservice.com%{REQUEST_URI} [L,R=301]
+
+  # One URL for the home page
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [L,R=301]
+
+  # Clean URLs: /privacy-policy.html -> /privacy-policy, and serve the .html behind it
+  RewriteCond %{THE_REQUEST} \s/+([^.\s?]+)\.html[\s?] [NC]
+  RewriteCond %1 !^404$
+  RewriteRule ^ /%1 [L,R=301]
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([a-z0-9-]+)/?$ $1.html [L,NC]
+
+  # Short links for the business card QR code
+  RewriteRule ^(cartao|links|contact|card)/?$ /redirect [L,R=301,NC]
+
+  # --------------------------------------------------------------------
+  # Antispam: bad bots, scrapers, referrer spam, probing
+  # --------------------------------------------------------------------
+  RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+  RewriteCond %{HTTP_USER_AGENT} (ahrefsbot|semrushbot|mj12bot|dotbot|blexbot|petalbot|bytespider|dataforseobot|megaindex|serpstatbot|seokicks|linkfluence|zoominfobot|barkrowler|masscan|zgrab|nikto|sqlmap|nmap|wpscan|acunetix|netsparker|httrack|webcopier|webzip|libwww-perl|python-requests|go-http-client|scrapy) [NC]
+  RewriteRule .* - [F,L]
+
+  RewriteCond %{HTTP_REFERER} (semalt|buttons-for-website|darodar|ilovevitaly|priceg|best-seo-offer|free-share-buttons|get-free-traffic|traffic2money|kambasoft|savetubevideo|ranksonic|o-o-6-o-o) [NC]
+  RewriteRule .* - [F,L]
+
+  # Requests for software this site does not run (WordPress, PHP shells, configs)
+  RewriteRule (^|/)(wp-admin|wp-login|wp-content|wp-includes|xmlrpc\.php|phpmyadmin|pma|cgi-bin|\.env|\.git|vendor/|composer\.(json|lock)|config\.php) - [F,L,NC]
+  RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+  RewriteCond %{QUERY_STRING} (union.*select|concat\(|base64_(en|de)code|eval\(|GLOBALS|_REQUEST|\.\./) [NC]
+  RewriteRule .* - [F,L]
+
+  # Only the methods a static site needs
+  RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS)$
+  RewriteRule .* - [F,L]
+
+  # --------------------------------------------------------------------
+  # Keep project working files off the web
+  # (brief, design notes, photo review, source logos, tooling)
+  # --------------------------------------------------------------------
+  RewriteRule (^|/)\.(?!well-known/) - [F,L]
+  RewriteRule ^(Logos|photo-review|node_modules)(/|$) - [F,L,NC]
+  RewriteRule \.(md|cjs|mjs|ts|map|log|bak|sql|sh|ps1|ini|yml|yaml|lock)$ - [F,L,NC]
+  RewriteCond %{REQUEST_URI} !^/site\.webmanifest$
+  RewriteRule \.json$ - [F,L,NC]
+</IfModule>
+
+# Fallback for hosts without mod_rewrite
+<FilesMatch "(^\.(?!well-known)|\.(md|cjs|mjs|json|log|bak|sh|ps1)$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+<Files "site.webmanifest">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</Files>
+
+# ----------------------------------------------------------------------
+# Security headers
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://server.arcgisonline.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+  Header always unset X-Powered-By
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# Test environment stays out of search results.
+# Only matches the escolats.com.br test host; the real domain is indexed normally.
+<IfModule mod_setenvif.c>
+  SetEnvIfNoCase Host "escolats\.com\.br$" STAGING
+</IfModule>
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow" env=STAGING
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Compression
+# ----------------------------------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml application/javascript application/json application/manifest+json application/xml image/svg+xml image/x-icon
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/manifest+json application/xml image/svg+xml image/x-icon
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Cache
+# HTML and site files always revalidate, so a new deploy shows at once.
+# CSS/JS carry a ?v= version in index.html: bump it on every deploy
+# and browsers fetch the new files (that is the cache-clean step).
+# ----------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                              "access plus 1 month"
+  ExpiresByType text/html                     "access plus 0 seconds"
+  ExpiresByType application/manifest+json     "access plus 1 week"
+  ExpiresByType text/plain                    "access plus 1 day"
+  ExpiresByType application/xml               "access plus 1 day"
+  ExpiresByType text/xml                      "access plus 1 day"
+  ExpiresByType text/css                      "access plus 1 year"
+  ExpiresByType application/javascript        "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/svg+xml                 "access plus 1 year"
+  ExpiresByType image/x-icon                  "access plus 1 month"
+  ExpiresByType font/woff2                    "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|txt|xml|webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|webp|png|jpe?g|svg|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.ico$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
