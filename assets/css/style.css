@@ -462,7 +462,6 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
 }
 .rv-row { overflow: hidden; }
 .rv-track { display: flex; width: max-content; animation: rv-drift var(--rv-dur, 50s) linear infinite; }
-.rv-row--rev .rv-track { animation-direction: reverse; }
 .rv:hover .rv-track, .rv:focus-within .rv-track { animation-play-state: paused; }
 .rv-group { display: flex; gap: 18px; padding-right: 18px; }
 @keyframes rv-drift { to { transform: translateX(calc(-1 * var(--rv-shift, 50%))); } }
@@ -474,6 +473,8 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
   box-shadow: 0 18px 40px -26px rgba(11, 43, 87, .5);
 }
 .review__mark { font-size: 1.6rem; color: var(--cyan); }
+.review__rating { color: var(--navy); font-size: 1.1rem; letter-spacing: .12em; }
+.review__who a { display: inline-flex; align-items: center; min-height: 44px; color: var(--navy); font-size: .85rem; text-underline-offset: 3px; }
 .review blockquote { margin: 0; }
 .review p { margin: 0; font-size: 1.06rem; line-height: 1.55; color: var(--navy-deep); }
 .review figcaption { display: flex; align-items: center; gap: 12px; }
@@ -489,7 +490,7 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
   .rv { -webkit-mask-image: none; mask-image: none; }
   .rv-track { animation: none; width: auto; }
   .rv-row { overflow-x: auto; }
-  .rv-group[data-clone], .rv-row[aria-hidden] { display: none; }
+  .rv-group[data-clone] { display: none; }
 }
 .reviews .section__cta { position: relative; z-index: 1; flex-wrap: wrap; gap: 14px; }
 

@@ -285,21 +285,7 @@
   const submit = qsend;
   const done = $('.done');
 
-  /* Lead attribution: keep the landing URL's ad tags for the whole visit */
-  (() => {
-    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
-    const params = new URLSearchParams(location.search);
-    let saved = {};
-    try { saved = JSON.parse(sessionStorage.getItem('rc-attr') || '{}'); } catch (err) {}
-    if (keys.some(k => params.get(k))) {
-      saved = { landing: location.href.split('#')[0], referrer: document.referrer };
-      keys.forEach(k => { if (params.get(k)) saved[k] = params.get(k).slice(0, 200); });
-      try { sessionStorage.setItem('rc-attr', JSON.stringify(saved)); } catch (err) {}
-    }
-    keys.forEach(k => { if (form.elements[k]) form.elements[k].value = saved[k] || ''; });
-    form.elements.page_url.value = saved.landing || location.href.split('#')[0];
-    form.elements.referrer.value = saved.referrer || document.referrer || '';
-  })();
+  form.elements.page_url.value = location.href.split('#')[0];
 
   /* Antispam: honeypot, minimum fill time, one send per 60s */
   const formOpened = Date.now();
