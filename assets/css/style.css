@@ -354,7 +354,7 @@ html { scrollbar-color: var(--navy) var(--haint-pale); }
   border: 6px solid #fff;
   box-shadow: var(--shadow-lift);
 }
-.owner__img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.owner__img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
 @media (min-width: 560px) and (max-width: 899px) { .owner { max-width: 440px; margin-inline: auto; width: 100%; } }
 @media (min-width: 900px) {
   .about__grid { grid-template-columns: 1.1fr .9fr; gap: clamp(56px, 7vw, 112px); }
